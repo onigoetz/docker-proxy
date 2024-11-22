@@ -1,0 +1,15 @@
+apiVersion: 1
+datasources:
+- orgId: 1
+  version: 2
+  name: InfluxDB
+  type: influxdb
+  access: proxy
+  url: http://influxdb:8086
+  isDefault: true
+  user: v1-user
+  jsonData:
+    dbName: v1-db
+    httpMode: POST
+  secureJsonData:
+    password: "v1-password"

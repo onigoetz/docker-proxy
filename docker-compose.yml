@@ -1,0 +1,36 @@
+services:
+    #docker-cli:
+    #  image: "docker:cli"
+    #  volumes:
+    #    - ./sock:/var/run/docker.sock
+    influxdb:
+      image: influxdb:2.0.7
+      environment:
+          DOCKER_INFLUXDB_INIT_MODE: setup
+          DOCKER_INFLUXDB_INIT_USERNAME: user
+          DOCKER_INFLUXDB_INIT_PASSWORD: long_password
+          DOCKER_INFLUXDB_INIT_ORG: my-org
+          DOCKER_INFLUXDB_INIT_BUCKET: my-bucket
+          DOCKER_INFLUXDB_INIT_RETENTION: 0
+          DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: admin-token
+          V1_DB_NAME: v1-db
+          V1_RP_NAME: v1-rp
+          V1_AUTH_USERNAME: v1-user
+          V1_AUTH_PASSWORD: v1-password
+      ports:
+        - "8086:8086"
+      volumes:
+        - ./influxdb:/docker-entrypoint-initdb.d
+    grafana:
+      image: grafana/grafana
+      container_name: grafana
+      restart: unless-stopped
+      environment:
+        - GF_AUTH_ANONYMOUS_ENABLED=true
+        - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+        - GF_AUTH_DISABLE_LOGIN_FORM=true
+      ports:
+        - '3000:3000'
+      volumes:
+        - ./grafana/provisioning:/etc/grafana/provisioning
+        - ./grafana/dashboards:/etc/dashboards
